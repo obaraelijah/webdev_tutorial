@@ -8,4 +8,6 @@ edition = "2021"
 [dependencies]
 actix-web = "4.3.1"
 serde = {version = "1.0.160", features = ["derive"]}
+dotenv = "0.15.0"
 serde_json = "1.0.96"
+sqlx = {version = "0.7.1", features = ["postgres", "runtime-tokio", "chrono", "uuid", "macros"]}

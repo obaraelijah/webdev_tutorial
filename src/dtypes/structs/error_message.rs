@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 
+
 #[derive(Serialize, Deserialize)]
 pub struct ErrorMessage {
     pub message: String,
@@ -20,7 +21,7 @@ impl ErrorMessage {
     }
 }
 
-impl fmt::Display for ErrorMessage {
+impl std::fmt::Display for ErrorMessage {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.message)
     }
