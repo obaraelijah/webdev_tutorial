@@ -2,6 +2,8 @@ use actix_web::{web, App, HttpServer};
 
 pub mod dtypes;
 pub mod db;
+pub mod routes;
+pub mod utils;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
