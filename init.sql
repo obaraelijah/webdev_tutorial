@@ -13,4 +13,4 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-\i /docker-entrypoint-initdb.d/migrations/blog.sql
+\i /docker-entrypoint-initdb.d/sql/blog.sql
