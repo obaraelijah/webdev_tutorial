@@ -10,6 +10,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new().service(
             web::scope("/api/v1")
+                .service(routes::blog())
         )
     })
     .bind(("127.0.0.1", 8000))?
