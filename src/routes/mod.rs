@@ -3,6 +3,15 @@ use actix_web::dev::HttpServiceFactory;
 pub mod blog;
 pub mod tag;
 
+pub fn tag() -> impl HttpServiceFactory {
+    (
+        tag::get_tag_by_id_or_all,
+        tag::delete_tag,
+        tag::create_tag,
+        tag::update_tag,
+    )
+}
+
 pub fn blog() -> impl HttpServiceFactory {
     (
         blog::create_blog,

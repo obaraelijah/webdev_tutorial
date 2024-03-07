@@ -11,6 +11,7 @@ async fn main() -> std::io::Result<()> {
         App::new().service(
             web::scope("/api/v1")
                 .service(routes::blog())
+                .service(routes::tag())
         )
     })
     .bind(("127.0.0.1", 8000))?

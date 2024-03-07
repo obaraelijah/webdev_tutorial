@@ -214,7 +214,7 @@ async fn get_tag_by_id_or_all(Query(params): Query<TagQueryParams>) -> HttpRespo
 }
 
 #[put("/blog")]
-async fn update_slug(tag: Json<Tag>) -> HttpResponse {
+async fn update_tag(tag: Json<Tag>) -> HttpResponse {
     match db::connect().await {
         Ok(pg) => {
             let returned: Result<Tag, Error> = sqlx::query_as!(
