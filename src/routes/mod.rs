@@ -1,6 +1,7 @@
 use actix_web::dev::HttpServiceFactory;
 
 pub mod blog;
+pub mod tag;
 
 pub fn blog() -> impl HttpServiceFactory {
     (
