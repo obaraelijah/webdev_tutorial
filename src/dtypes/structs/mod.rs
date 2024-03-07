@@ -3,10 +3,12 @@ use serde::{Deserialize, Serialize};
 pub mod error_message;
 pub mod blog;
 pub mod tag;
+pub mod auth;
 
 pub use self::error_message::ErrorMessage;
 pub use self::blog::Blog;
 pub use self::tag::*;
+pub use self::auth::*;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Id {
