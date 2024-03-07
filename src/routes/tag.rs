@@ -222,7 +222,7 @@ async fn update_slug(tag: Json<Tag>) -> HttpResponse {
                 r#"
                     INSERT INTO tag (id, name, assoc_table)
                     VALUES ($1, $2, $3)
-                    ON_CONFLICT (id)
+                    ON CONFLICT (id)
                     DO UPDATE SET
                         id = EXCLUDED.id,
                         name = EXCLUDED.name,
