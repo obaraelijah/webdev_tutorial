@@ -4,11 +4,12 @@ pub mod dtypes;
 pub mod db;
 pub mod routes;
 pub mod utils;
+pub mod middleware;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
-        App::new().service(
+        App::new().wrap(middleware::handle_cors()).service(
             web::scope("/api/v1")
                 .service(routes::auth())
                 .service(routes::blog())
