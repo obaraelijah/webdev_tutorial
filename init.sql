@@ -15,3 +15,4 @@ $$ LANGUAGE plpgsql;
 
 \i /docker-entrypoint-initdb.d/sql/blog.sql
 \i /docker-entrypoint-initdb.d/sql/tag.sql
+\i /docker-entrypoint-initdb.d/sql/tag.sql
