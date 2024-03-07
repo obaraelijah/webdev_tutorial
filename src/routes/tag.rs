@@ -1,5 +1,3 @@
-use std::future::IntoFuture;
-
 use crate::dtypes::structs::{ Id, Tag, AssocTable, TagQueryParams};
 use crate::db;
 use crate::utils::handle_sql_error;
