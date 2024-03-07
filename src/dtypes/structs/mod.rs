@@ -2,9 +2,11 @@ use serde::{Deserialize, Serialize};
 
 pub mod error_message;
 pub mod blog;
+pub mod tag;
 
 pub use self::error_message::ErrorMessage;
 pub use self::blog::Blog;
+pub use self::tag::*;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Id {
