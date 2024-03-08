@@ -1,8 +1,12 @@
-use actix_web::{error::InternalError, Error, HttpResponse, HttpMessage, dev::{ServiceResponse, Transform, Service}};
+use actix_web::{
+    dev::{Service, ServiceResponse, Transform},
+    error::InternalError,
+    Error, HttpMessage, HttpResponse,
+};
+use futures::future::{ok, Future, Ready};
+use jsonwebtoken::{decode, Algorithm, DecodingKey, Validation};
+use serde::{Deserialize, Serialize};
 use std::env;
-use jsonwebtoken::{decode, Validation, Algorithm, DecodingKey};
-use serde::{Serialize, Deserialize};
-use futures::future::{ok, Ready, Future};
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
@@ -55,7 +59,7 @@ where
         self.service.poll_ready(cx)
     }
 
-    fn call(&self, req: Req) -> Self::Future  {
+    fn call(&self, req: Req) -> Self::Future {
         dotenv::dotenv().ok();
 
         let skip_auth_str = env::var("SKIP_AUTH").expect("SKIP_AUTH is not set");
@@ -89,28 +93,41 @@ where
                         let token = &auth_str[7..];
 
                         let decoding_key_result = DecodingKey::from_base64_secret(&jwt_secret);
-                        
+
                         match decoding_key_result {
                             Ok(decoding_key) => {
                                 let validation = Validation::new(Algorithm::HS256);
                                 match decode::<Claims>(token, &decoding_key, &validation) {
                                     Ok(_) => {
                                         return fut.await;
-                                    },
+                                    }
                                     Err(_) => {
-                                        return Err(InternalError::from_response("UNAUTHORIZED", HttpResponse::Unauthorized().finish()).into());
+                                        return Err(InternalError::from_response(
+                                            "UNAUTHORIZED",
+                                            HttpResponse::Unauthorized().finish(),
+                                        )
+                                        .into());
                                     }
                                 }
-                            },
+                            }
                             Err(_) => {
                                 // Redirect to login route if decoding_key is an error
-                                return Err(InternalError::from_response("UNAUTHORIZED", HttpResponse::Found().append_header(("Location", "/api/v1/auth")).finish()).into());
+                                return Err(InternalError::from_response(
+                                    "UNAUTHORIZED",
+                                    HttpResponse::Found()
+                                        .append_header(("Location", "/api/v1/auth"))
+                                        .finish(),
+                                )
+                                .into());
                             }
                         }
                     }
                 }
             }
-            Err(InternalError::from_response("UNAUTHORIZED", HttpResponse::Unauthorized().finish()).into())
+            Err(
+                InternalError::from_response("UNAUTHORIZED", HttpResponse::Unauthorized().finish())
+                    .into(),
+            )
         })
     }
 }

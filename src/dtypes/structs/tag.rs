@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Tag {
@@ -20,5 +20,3 @@ pub struct TagQueryParams {
     pub id: Option<i32>,
     pub table: Option<AssocTable>,
 }
-
-

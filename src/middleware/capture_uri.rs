@@ -1,8 +1,8 @@
-use actix_web::dev::{Transform, Service, ServiceResponse, ServiceRequest};
+use actix_web::dev::{Service, ServiceRequest, ServiceResponse, Transform};
+use actix_web::Error;
 use actix_web::HttpMessage;
 use actix_web::Result;
 use core::future::Ready;
-use actix_web::Error;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 

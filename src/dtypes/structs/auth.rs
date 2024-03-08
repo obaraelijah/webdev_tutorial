@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-// sqlx::FromRow for converting database rows into instances of Auth 
+// sqlx::FromRow for converting database rows into instances of Auth
 #[derive(sqlx::FromRow, Serialize, Deserialize, Debug)]
 pub struct Auth {
     pub id: Option<i32>,
@@ -21,5 +21,5 @@ pub struct Auth {
 pub enum Status {
     Active,
     Inactive,
-    Suspended
+    Suspended,
 }

@@ -1,10 +1,10 @@
 use actix_web::{web, App, HttpServer};
 
-pub mod dtypes;
 pub mod db;
+pub mod dtypes;
+pub mod middleware;
 pub mod routes;
 pub mod utils;
-pub mod middleware;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -15,7 +15,7 @@ async fn main() -> std::io::Result<()> {
                 .wrap(middleware::CaptureUri)
                 .service(routes::auth())
                 .service(routes::blog())
-                .service(routes::tag())
+                .service(routes::tag()),
         )
     })
     .bind(("127.0.0.1", 8000))?

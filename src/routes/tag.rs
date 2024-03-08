@@ -1,8 +1,8 @@
-use crate::dtypes::structs::{ Id, Tag, AssocTable, TagQueryParams};
 use crate::db;
+use crate::dtypes::structs::{AssocTable, Id, Tag, TagQueryParams};
 use crate::utils::handle_sql_error;
 use actix_web::http::StatusCode;
-use actix_web::{get, put, post, delete, web::Query, HttpResponse, web::Json};
+use actix_web::{delete, get, post, put, web::Json, web::Query, HttpResponse};
 use sqlx::postgres::PgQueryResult;
 use sqlx::Error;
 
@@ -34,7 +34,7 @@ async fn create_tag(tag: Json<Tag>) -> HttpResponse {
                     .content_type("application/json")
                     .body(
                         serde_json::to_string(&Json(record))
-                            .unwrap_or_else(|e| format!("JSON serialization error: {}", e))
+                            .unwrap_or_else(|e| format!("JSON serialization error: {}", e)),
                     ),
                 Err(e) => handle_sql_error(e),
             }
@@ -42,7 +42,7 @@ async fn create_tag(tag: Json<Tag>) -> HttpResponse {
         Err(e) => HttpResponse::InternalServerError()
             .status(StatusCode::INTERNAL_SERVER_ERROR)
             .content_type("application/json")
-            .body(e.message)
+            .body(e.message),
     }
 }
 
@@ -51,12 +51,11 @@ async fn get_tag_by_id_or_all(Query(params): Query<TagQueryParams>) -> HttpRespo
     match params.id {
         Some(id) => {
             match params.table {
-                Some(table) => {
-                    match db::connect().await {
-                        Ok(pg) => {
-                            let returned: Result<Tag, Error> = sqlx::query_as!(
-                        Tag,
-                        r#"
+                Some(table) => match db::connect().await {
+                    Ok(pg) => {
+                        let returned: Result<Tag, Error> = sqlx::query_as!(
+                            Tag,
+                            r#"
                             SELECT
                                 id,
                                 name,
@@ -68,33 +67,30 @@ async fn get_tag_by_id_or_all(Query(params): Query<TagQueryParams>) -> HttpRespo
                             assoc_table = $2
                             LIMIT 1;
                         "#,
-                        id,
-                        table as AssocTable
-                    )
-                                .fetch_one(&pg)
-                                .await;
+                            id,
+                            table as AssocTable
+                        )
+                        .fetch_one(&pg)
+                        .await;
 
-                            match returned {
-                                Ok(record) => HttpResponse::Ok()
-                                    .status(StatusCode::OK)
-                                    .content_type("application/json")
-                                    .body(
-                                        serde_json::to_string(&Json(record))
-                                            .unwrap_or_else(|e| format!("JSON serialization error: {}", e)),
-                                    ),
-                                Err(e) => handle_sql_error(e),
-                            }
+                        match returned {
+                            Ok(record) => HttpResponse::Ok()
+                                .status(StatusCode::OK)
+                                .content_type("application/json")
+                                .body(serde_json::to_string(&Json(record)).unwrap_or_else(|e| {
+                                    format!("JSON serialization error: {}", e)
+                                })),
+                            Err(e) => handle_sql_error(e),
                         }
-                        Err(e) => HttpResponse::InternalServerError()
-                            .status(StatusCode::INTERNAL_SERVER_ERROR)
-                            .content_type("application/json")
-                            .body(e.message),
                     }
+                    Err(e) => HttpResponse::InternalServerError()
+                        .status(StatusCode::INTERNAL_SERVER_ERROR)
+                        .content_type("application/json")
+                        .body(e.message),
                 },
-                None => {
-                    match db::connect().await {
-                        Ok(pg) => {
-                            let returned: Result<Tag, Error> = sqlx::query_as!(
+                None => match db::connect().await {
+                    Ok(pg) => {
+                        let returned: Result<Tag, Error> = sqlx::query_as!(
                             Tag,
                             r#"
                                 SELECT
@@ -109,37 +105,34 @@ async fn get_tag_by_id_or_all(Query(params): Query<TagQueryParams>) -> HttpRespo
                             "#,
                             id
                         )
-                                .fetch_one(&pg)
-                                .await;
+                        .fetch_one(&pg)
+                        .await;
 
-                            match returned {
-                                Ok(record) => HttpResponse::Ok()
-                                    .status(StatusCode::OK)
-                                    .content_type("application/json")
-                                    .body(
-                                        serde_json::to_string(&Json(record))
-                                            .unwrap_or_else(|e| format!("JSON serialization error: {}", e)),
-                                    ),
+                        match returned {
+                            Ok(record) => HttpResponse::Ok()
+                                .status(StatusCode::OK)
+                                .content_type("application/json")
+                                .body(serde_json::to_string(&Json(record)).unwrap_or_else(|e| {
+                                    format!("JSON serialization error: {}", e)
+                                })),
 
-                                Err(e) => handle_sql_error(e),
-                            }
+                            Err(e) => handle_sql_error(e),
                         }
-                        Err(e) => HttpResponse::InternalServerError()
-                            .status(StatusCode::INTERNAL_SERVER_ERROR)
-                            .content_type("application/json")
-                            .body(e.message),
                     }
-                }
+                    Err(e) => HttpResponse::InternalServerError()
+                        .status(StatusCode::INTERNAL_SERVER_ERROR)
+                        .content_type("application/json")
+                        .body(e.message),
+                },
             }
-        },
+        }
         None => {
             match params.table {
-                Some(table) => {
-                    match db::connect().await {
-                        Ok(pg) => {
-                            let returned: Result<Vec<Tag>, Error> = sqlx::query_as!(
-                    Tag,
-                    r#"
+                Some(table) => match db::connect().await {
+                    Ok(pg) => {
+                        let returned: Result<Vec<Tag>, Error> = sqlx::query_as!(
+                            Tag,
+                            r#"
                         SELECT
                             id,
                             name,
@@ -149,35 +142,32 @@ async fn get_tag_by_id_or_all(Query(params): Query<TagQueryParams>) -> HttpRespo
                         FROM tag
                         WHERE assoc_table = $1
                     "#,
-                        table as AssocTable
-                )
-                                .fetch_all(&pg)
-                                .await;
+                            table as AssocTable
+                        )
+                        .fetch_all(&pg)
+                        .await;
 
-                            match returned {
-                                Ok(record) => HttpResponse::Ok()
-                                    .status(StatusCode::OK)
-                                    .content_type("application/json")
-                                    .body(
-                                        serde_json::to_string(&Json(record))
-                                            .unwrap_or_else(|e| format!("JSON serialization error: {}", e)),
-                                    ),
+                        match returned {
+                            Ok(record) => HttpResponse::Ok()
+                                .status(StatusCode::OK)
+                                .content_type("application/json")
+                                .body(serde_json::to_string(&Json(record)).unwrap_or_else(|e| {
+                                    format!("JSON serialization error: {}", e)
+                                })),
 
-                                Err(e) => handle_sql_error(e),
-                            }
+                            Err(e) => handle_sql_error(e),
                         }
-                        Err(e) => HttpResponse::InternalServerError()
-                            .status(StatusCode::INTERNAL_SERVER_ERROR)
-                            .content_type("application/json")
-                            .body(e.message),
                     }
+                    Err(e) => HttpResponse::InternalServerError()
+                        .status(StatusCode::INTERNAL_SERVER_ERROR)
+                        .content_type("application/json")
+                        .body(e.message),
                 },
-                None => {
-                    match db::connect().await {
-                        Ok(pg) => {
-                            let returned: Result<Vec<Tag>, Error> = sqlx::query_as!(
-                                Tag,
-                                r#"
+                None => match db::connect().await {
+                    Ok(pg) => {
+                        let returned: Result<Vec<Tag>, Error> = sqlx::query_as!(
+                            Tag,
+                            r#"
                                     SELECT
                                         id,
                                         name,
@@ -186,28 +176,26 @@ async fn get_tag_by_id_or_all(Query(params): Query<TagQueryParams>) -> HttpRespo
                                         to_char(edited, 'DD Month YYYY HH12:MI AM') as edited
                                     FROM tag
                                 "#
-                            )
-                                .fetch_all(&pg)
-                                .await;
+                        )
+                        .fetch_all(&pg)
+                        .await;
 
-                            match returned {
-                                Ok(record) => HttpResponse::Ok()
-                                    .status(StatusCode::OK)
-                                    .content_type("application/json")
-                                    .body(
-                                        serde_json::to_string(&Json(record))
-                                            .unwrap_or_else(|e| format!("JSON serialization error: {}", e)),
-                                    ),
+                        match returned {
+                            Ok(record) => HttpResponse::Ok()
+                                .status(StatusCode::OK)
+                                .content_type("application/json")
+                                .body(serde_json::to_string(&Json(record)).unwrap_or_else(|e| {
+                                    format!("JSON serialization error: {}", e)
+                                })),
 
-                                Err(e) => handle_sql_error(e),
-                            }
+                            Err(e) => handle_sql_error(e),
                         }
-                        Err(e) => HttpResponse::InternalServerError()
-                            .status(StatusCode::INTERNAL_SERVER_ERROR)
-                            .content_type("application/json")
-                            .body(e.message),
                     }
-                }
+                    Err(e) => HttpResponse::InternalServerError()
+                        .status(StatusCode::INTERNAL_SERVER_ERROR)
+                        .content_type("application/json")
+                        .body(e.message),
+                },
             }
         }
     }
@@ -250,7 +238,7 @@ async fn update_tag(tag: Json<Tag>) -> HttpResponse {
                         serde_json::to_string(&Json(record))
                             .unwrap_or_else(|e| format!("JSON serialization error: {}", e)),
                     ),
-                Err(e) => handle_sql_error(e),  
+                Err(e) => handle_sql_error(e),
             }
         }
         Err(e) => HttpResponse::InternalServerError()
@@ -264,7 +252,7 @@ async fn update_tag(tag: Json<Tag>) -> HttpResponse {
 async fn delete_tag(id: Json<Id>) -> HttpResponse {
     match db::connect().await {
         Ok(pg) => {
-            let returned: Result<PgQueryResult, Error> =    
+            let returned: Result<PgQueryResult, Error> =
                 sqlx::query_as!(Tag, "DELETE FROM Tag WHERE id = $1;", id.id)
                     .execute(&pg)
                     .await;
@@ -280,6 +268,6 @@ async fn delete_tag(id: Json<Id>) -> HttpResponse {
         Err(e) => HttpResponse::InternalServerError()
             .status(StatusCode::INTERNAL_SERVER_ERROR)
             .content_type("application/json")
-            .body(e.message)
-        }
+            .body(e.message),
+    }
 }

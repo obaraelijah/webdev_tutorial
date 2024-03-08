@@ -1,7 +1,7 @@
 use actix_cors::Cors;
 use std::env;
 
-pub fn handle_cors () -> Cors {
+pub fn handle_cors() -> Cors {
     dotenv::dotenv().ok();
     let mut allowed_origin = env::var("FRONTEND_URL").expect("FRONTEND_URL is not set");
 

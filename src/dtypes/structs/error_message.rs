@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 
-
 #[derive(Serialize, Deserialize)]
 pub struct ErrorMessage {
     pub message: String,

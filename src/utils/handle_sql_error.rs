@@ -6,11 +6,18 @@ pub fn handle_sql_error(e: Error) -> HttpResponse {
     let status_code = match &e {
         Error::Database(_) => StatusCode::INTERNAL_SERVER_ERROR,
         Error::RowNotFound => StatusCode::NOT_FOUND,
-        Error::Decode(_) | Error::Io(_) | Error::Migrate(_) | Error::Tls(_) | Error::Protocol(_) | Error::Configuration(_) => StatusCode::INTERNAL_SERVER_ERROR,
+        Error::Decode(_)
+        | Error::Io(_)
+        | Error::Migrate(_)
+        | Error::Tls(_)
+        | Error::Protocol(_)
+        | Error::Configuration(_) => StatusCode::INTERNAL_SERVER_ERROR,
         Error::PoolTimedOut => StatusCode::GATEWAY_TIMEOUT,
         Error::PoolClosed => StatusCode::SERVICE_UNAVAILABLE,
         Error::WorkerCrashed => StatusCode::INTERNAL_SERVER_ERROR,
-        Error::ColumnNotFound(_) | Error::ColumnDecode { .. } | Error::TypeNotFound { .. } => StatusCode::BAD_REQUEST,
+        Error::ColumnNotFound(_) | Error::ColumnDecode { .. } | Error::TypeNotFound { .. } => {
+            StatusCode::BAD_REQUEST
+        }
         _ => StatusCode::INTERNAL_SERVER_ERROR,
     };
 
@@ -26,7 +33,9 @@ pub fn handle_sql_error(e: Error) -> HttpResponse {
         Error::Tls(err) => format!("TLS error: {}", err),
         Error::Protocol(err) => format!("Protocol error: {}", err),
         Error::ColumnNotFound(column) => format!("Column not found: {}", column),
-        Error::ColumnDecode { index, source } => format!("Error decoding column at index {}: {}", index, source),
+        Error::ColumnDecode { index, source } => {
+            format!("Error decoding column at index {}: {}", index, source)
+        }
         Error::Configuration(err) => format!("Configuration error: {}", err),
         Error::TypeNotFound { type_name } => format!("Type not found: {}", type_name),
         _ => "Non-exhaustive error variant encountered".to_string(),
@@ -34,5 +43,8 @@ pub fn handle_sql_error(e: Error) -> HttpResponse {
 
     HttpResponse::build(status_code)
         .content_type("application/json")
-        .body(serde_json::to_string(&Json(error_message)).unwrap_or_else(|e| format!("JSON serialization error: {}", e)))
+        .body(
+            serde_json::to_string(&Json(error_message))
+                .unwrap_or_else(|e| format!("JSON serialization error: {}", e)),
+        )
 }

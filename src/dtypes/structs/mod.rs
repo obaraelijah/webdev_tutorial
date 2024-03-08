@@ -1,14 +1,14 @@
 use serde::{Deserialize, Serialize};
 
-pub mod error_message;
-pub mod blog;
-pub mod tag;
 pub mod auth;
+pub mod blog;
+pub mod error_message;
+pub mod tag;
 
-pub use self::error_message::ErrorMessage;
-pub use self::blog::Blog;
-pub use self::tag::*;
 pub use self::auth::*;
+pub use self::blog::Blog;
+pub use self::error_message::ErrorMessage;
+pub use self::tag::*;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Id {
@@ -20,6 +20,6 @@ impl std::fmt::Display for Id {
         if let Some(id) = self.id {
             return write!(f, "Id: {}", id);
         }
-        write!(f, "Id: {}", "None")
+        write!(f, "Id: None")
     }
 }

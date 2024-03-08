@@ -1,14 +1,11 @@
 use actix_web::dev::HttpServiceFactory;
 
+pub mod auth;
 pub mod blog;
 pub mod tag;
-pub mod auth;
 
 pub fn auth() -> impl HttpServiceFactory {
-    (
-        auth::login, 
-        auth::create_user
-    )
+    (auth::login, auth::create_user)
 }
 
 pub fn tag() -> impl HttpServiceFactory {

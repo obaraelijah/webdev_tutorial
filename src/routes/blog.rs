@@ -1,11 +1,10 @@
-use crate::dtypes::structs::{Blog, Id};
 use crate::db;
+use crate::dtypes::structs::{Blog, Id};
 use crate::utils::handle_sql_error;
 use actix_web::http::StatusCode;
-use actix_web::{get, post, put, delete, web::Query, web::Json, HttpResponse};
+use actix_web::{delete, get, post, put, web::Json, web::Query, HttpResponse};
 use sqlx::postgres::PgQueryResult;
 use sqlx::Error;
-
 
 #[post("/blog")]
 async fn create_blog(blog: Json<Blog>) -> HttpResponse {
@@ -20,7 +19,7 @@ async fn create_blog(blog: Json<Blog>) -> HttpResponse {
                     to_char(created, 'DD Month YYYY HH12:MI AM') as created,
                     to_char(edited, 'DD Month YYYY HH12:MI AM') as edited
                 "#,
-                blog.title, 
+                blog.title,
                 blog.slug,
                 blog.content,
                 blog.image_link,
@@ -45,7 +44,7 @@ async fn create_blog(blog: Json<Blog>) -> HttpResponse {
         Err(e) => HttpResponse::InternalServerError()
             .status(StatusCode::INTERNAL_SERVER_ERROR)
             .content_type("application/json")
-            .body(e.message)
+            .body(e.message),
     }
 }
 
@@ -82,7 +81,7 @@ async fn get_featured_blogs() -> HttpResponse {
                         serde_json::to_string(&Json(records))
                             .unwrap_or_else(|e| format!("JSON serialization error: {}", e)),
                     ),
-                Err(e) => handle_sql_error(e),   
+                Err(e) => handle_sql_error(e),
             }
         }
         Err(e) => HttpResponse::InternalServerError()
@@ -240,9 +239,10 @@ async fn update_blog(blog: Json<Blog>) -> HttpResponse {
 async fn delete_blog(id: Json<Id>) -> HttpResponse {
     match db::connect().await {
         Ok(pg) => {
-            let returned: Result<PgQueryResult, Error> = sqlx::query!("DELETE FROM blog WHERE id = $1", id.id)
-                .execute(&pg)
-                .await;
+            let returned: Result<PgQueryResult, Error> =
+                sqlx::query!("DELETE FROM blog WHERE id = $1", id.id)
+                    .execute(&pg)
+                    .await;
 
             match returned {
                 Ok(_) => HttpResponse::NoContent()
