@@ -2,6 +2,11 @@
 name = "webdev_guide"
 version = "0.1.0"
 edition = "2021"
+authors = ["Elijah Samson <elijahobara357@gmail.com>"]
+description = "Learn how to build a webservice in Rust!"
+repository = "https://github.com/obaraelijah/webdev_tutorial"
+license = "MIT OR Apache-2.0"
+build = "build.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
