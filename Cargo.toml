@@ -12,8 +12,6 @@ readme = "README.md"
 licence = "MIT OR APACHE-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-[package.metadata.docs.rs]
-features = ["default"]
 
 [dependencies]
 actix-web = "4.3.1"
