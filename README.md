@@ -76,4 +76,5 @@ The `SKIP_AUTH` environment variable controls JWT authentication. Set it to `tru
 ## Additional Resources
 
 - [Crates.io Package](https://crates.io/crates/webdev_guide)
-- [PG Admin Guide](https://onexlab-io.medium.com/docker-compose-postgres-initdb-ba0021deef76)s
+- [PG Admin Guide](https://onexlab-io.medium.com/docker-compose-postgres-initdb-ba0021deef76)
+- Medium Post: [Creating a Web Service in Rust with Actix-Web, SQLx, and PostgreSQL](https://medium.com/@elijahobara/building-a-web-service-in-rust-with-actix-web-sqlx-and-postgresql-a70816c07b9c)

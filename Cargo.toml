@@ -1,6 +1,6 @@
 [package]
 name = "webdev_guide"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
 authors = ["Elijah Samson <elijahobara357@gmail.com>"]
 description = "Learn how to build a webservice in Rust!"
