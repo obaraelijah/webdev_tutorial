@@ -73,3 +73,7 @@ The `init.sql` file contains the SQL statements that define the database schema.
 
 The `SKIP_AUTH` environment variable controls JWT authentication. Set it to `true` to disable JWT during development.
 
+## Additional Resources
+
+- [Crates.io Package](https://crates.io/crates/webdev_guide)
+- [PG Admin Guide](https://onexlab-io.medium.com/docker-compose-postgres-initdb-ba0021deef76)s
