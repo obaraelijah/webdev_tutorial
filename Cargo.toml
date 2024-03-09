@@ -11,15 +11,7 @@ build = "build.rs"
 readme = "README.md"
 licence = "MIT OR APACHE-2.0"
 
-[badges]
-docs-rs = { repository = "https://docs.rs/webdev_guide", branch = "main", mode = "light" }
-
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-[package.metadata.docs.rs]
-features = ["default"]
-rustc = "1.75.0-nightly (608e9682f 2024-03-09)"
-docsrs = "0.5.0 (45c814ae 2024-03-09)"
-
 
 [dependencies]
 actix-web = "4.3.1"
