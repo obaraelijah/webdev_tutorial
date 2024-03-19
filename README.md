@@ -51,10 +51,10 @@ cargo doc --open
     6. Select `Bearer Token`. After you select `Bearer Token`, underneath should apear another dropdown that says `Token`. Paste the copied bearer token here from before. You should now be authorized for four hours, or for however long `JWT_HOURS_ACTIVE` is set to in your .env file.
     7. If you have any issues hitting the routes, try changing every `localhost:8080` to `http://127.0.0.1:8080`
 
-6. **Test Routes**: Open your browser or use a tool like Postman to hit the following route:
+5. **Test Routes**: Open your browser or use a tool like Postman to hit the following route:
 
     ```
-    http://127.0.0.1:8080/blog
+    http://127.0.0.1:8080/api/v1/blog
     ```
 
 ### Database GUI (PgAdmin4)
